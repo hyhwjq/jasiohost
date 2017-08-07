@@ -50,6 +50,11 @@ public class AsioChannel {
     this.index = index;
     this.isInput = isInput;
     this.isActive = isActive;
+
+    if(!isInput) {
+      this.isActive = false;
+    }
+
     this.channelGroup = channelGroup;
     this.sampleType = sampleType;
     this.name = name;

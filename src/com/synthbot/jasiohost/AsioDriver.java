@@ -653,16 +653,20 @@ public class AsioDriver {
   }
   
   private void fireBufferSwitch(long systemTime, long samplePosition, int bufferIndex) {
-    for (AsioChannel channel : inputChannels) {
-      if (channel.isActive()) channel.setBufferIndex(bufferIndex);
-    }
-    for (AsioChannel channel : outputChannels) {
-      if (channel.isActive()) channel.setBufferIndex(bufferIndex);
-    }
-    // NOTE(mhroth): use a standard for loop in order to avoid implicitly creating iterator objects
-    // as this function is called very often
-    for (int i = 0; i < listeners.size(); i++) {
-      listeners.get(i).bufferSwitch(systemTime, samplePosition, activeChannels);
+    try {
+      for (AsioChannel channel : inputChannels) {
+        if (channel.isActive()) channel.setBufferIndex(bufferIndex);
+      }
+      for (AsioChannel channel : outputChannels) {
+        if (channel.isActive()) channel.setBufferIndex(bufferIndex);
+      }
+      // NOTE(mhroth): use a standard for loop in order to avoid implicitly creating iterator objects
+      // as this function is called very often
+      for (int i = 0; i < listeners.size(); i++) {
+        listeners.get(i).bufferSwitch(systemTime, samplePosition, activeChannels);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }
